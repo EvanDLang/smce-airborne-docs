@@ -2,16 +2,19 @@
 Uploading Files to the SMCE
 ===========================
 
+S3 Upload Tool
+--------------
+
 **To gain access to the S3 upload tool, contact an administrator and ask to be added to the ``s3-upload`` group.**
 
-Uploading files to the SMCE from your local machine can be challenging. While JupyterHub provides a built-in upload button, it is not well suited 
-for large files and may be slow or fail to complete the upload.
+Uploading files to the SMCE from your local machine can be challenging. While the SMCE JupyterHub provides a built-in upload button, it is not well suited
+for large files (e.g., >1GB) and may be slow or fail to complete the upload.
 
-To address this, we provide a dedicated upload application that allows users to upload files directly to the SMCE user bucket. 
+To address this, we provide a dedicated upload application that allows users to upload files directly to the SMCE user bucket.
 The application works by submitting a list of filenames to the service, which then generates pre-signed URLs. These URLs are used to upload files directly
 to S3 using HTTP ``PUT`` requests, bypassing JupyterHub entirely.
 
-**At this time, each individual file must be 5 GB or smaller.**  
+**At this time, each individual file must be 5 GB or smaller.**
 If you need to upload larger files, please contact an administrator for assistance.
 
 The following script can be used to upload files from your local machine.
@@ -19,12 +22,12 @@ The following script can be used to upload files from your local machine.
 To run the script, you must provide:
 
 - Your Keycloak username and password
-- The local path to the file or directory you would like to upload  
+- The local path to the file or directory you would like to upload
   (see examples included in the script)
 
 Optional:
 
-- A bucket sub-path indicating where the files should be placed within your user bucket:  
+- A bucket sub-path indicating where the files should be placed within your user bucket:
   ``/s3/airborne-smce-prod-user-bucket/<username>/<provided-bucket-path>``
 
 .. code-block:: python
@@ -38,14 +41,14 @@ Optional:
     KEYCLOAK_HOST = "https://auth.airborne.smce.nasa.gov"
     REALM = "airborne-smce"
     CLIENT_ID = "s3_upload"
-    
+
     # Input username and password
     USERNAME = ""
     PASSWORD = ""
 
     # Local path to file or files
     LOCAL_PATH = '.'
-    
+
     # Path in the S3 bucket where files will be uploaded.
     # Your username will automatically be prepended.
     # Example: BUCKET_PATH = 'sub_dir' → uploaded to <your_username>/sub_dir
@@ -113,3 +116,43 @@ Optional:
 
 
 If you have any questions or issues upload a file please contact an administrator.
+
+Uploading files from local or HPC storage
+-----------------------------------------
+
+This section is a reference to help transferring local, non-AWS based files to an S3 bucket but is not a comprehensive how-to, particularly when you have many (1000s) or very large (>100GB) files to upload.
+
+**Note, you must have AWS credential and the aws-cli setup on the workstation you want to move you files from. If you are unsure if you have these, contact an SMCE administrator. You may also generate keys in your AWS Console -> Security Credentials to access personal S3 buckets.**
+
+Installations:
+
+
+Once you have AWS credentials you can set up your file transfer profile:
+
+1. Create a local credentials file if it does not already exist by checking if the credentials file exists ``ls -a ~/.aws``. If no credentials file exists continue, else move onto step 3:
+
+    .. code-block:: bash
+
+        mkdir -p ~/.aws
+        vim ~/.aws/credentials
+
+2. Add your AWS credential keys to the created file and save. The text in brackets is called the *profile name*. This will be used to reference your ``aws_access_key_id`` and ``aws_secret_access_key`` when making AWS API calls.
+
+    .. code-block:: ini
+
+        :caption: ~/.aws/credentials
+        :emphasize-lines: 2,3
+
+        [profilename]
+        aws_access_key_id=123abc
+        aws_secret_access_key=12345abcdef
+
+3. Test that your credentials are setup correctly on a bucket you want to move your data to:
+
+    .. code-block:: bash
+
+        # PROFILE_NAME: the profilename you supplied in the brackets of the credentials file
+        # BUCKET_NAME: the name of the S3 bucket you wish to access or eventually move data to/from. Can be an index (i.e., path) within the bucket.
+        aws s2 ls --profile PROFILE_NAME s3://BUCKET_NAME
+
+You should see the contents of your bucket listed. Use a trailing ``/`` to list the contents within the index or add the ``--recursive`` flag to list all contents in the bucket index. s3 buckets arent like a typical file system and instead everything is stored as an object with an index. We can use indices (think of them like directory paths) to organize datasets.
