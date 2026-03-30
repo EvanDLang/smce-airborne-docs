@@ -23,4 +23,4 @@ Access associated science and technical tutorials via the (`618 Tutorials GitHub
 
    pages/pcluster
    pages/dask_gateway
-   pages/s3_upload
+   pages/s3-uploader

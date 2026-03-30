@@ -1,0 +1,14 @@
+[workspace]
+name = "smce-airborne-docs"
+version = "0.1.0"
+description = "Sphinx documentation build environment for Airborne SMCE"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64"]
+
+[dependencies]
+python = ">=3.11"
+sphinx = "*"
+sphinx_rtd_theme = "*"
+
+[tasks]
+build-docs = "sphinx-build -b html docs/source docs/build/html"
