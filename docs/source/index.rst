@@ -12,9 +12,12 @@ Access associated science and technical tutorials via the (`618 Tutorials GitHub
    :caption: Getting started
 
    Introduction to the Airborne SMCE </pages/introduction>
-   pages/smce_best_practices
-   pages/conda_store
+   pages/compute_resources
+   pages/storage
+   pages/virtual_env_management
    pages/git_setup
+   pages/qgis
+   pages/rstudio
 
 .. toctree::
    :maxdepth: 2
