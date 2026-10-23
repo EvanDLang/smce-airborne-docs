@@ -2,48 +2,27 @@
 Git and GitHub setup
 ===========================================
 
-Authenticating your GitHub account: Personal Access Tokens
+Authenticating your GitHub account: CLI web login using HTTPS
 ----------------------------------------------------------
+1. Open the terminal and run: ``gh auth login``
 
-Github personal access tokens (PATs) enable you to authenticate with Github from a local coding environment without needing to provide your username and password for each GitHub related action (e.g., pushing to Github).
+2. Select ``GitHub.com``
 
-There are various ways you can authenticate and develop github code and security access on the SMCE, but one suggested approach is outlined below using fine-grained PATs. Another common alternative is to use SSH keys. We implement fine-grained PATs for SMCE use as they allow for more control over permissions features such as read/write to repos and access to the GitHub API.
+3. Select ``HTTPS`` (or SSH, if you are comfortable setting up SSH keys).
 
-1. Create a fine-grained PAT for use with the GitHub command line interface (CLI)
+4. Select ``Login with a web browser``.
 
-   - Visit the `PAT section of your GitHub account <https://github.com/settings/personal-access-tokens>`_
-   - Select your profile thumbnail > "Settings" > scroll on the left hand side to "< > Developer Settings"
-   - Expand "Personal access tokens" on the left hand side and select "Fine-grained tokens"
-   - Select "Generate new token"
-     - name your token, set expiration date (recommended 6 month maximum)
-     - the easiest method (among many) is to select "Only select repositories" under "Repository access" and add the repos you want to access on the SMCE
-     - for now, once you have added at least one repository, click the "+ Add permissions" under the Permissions header, scroll down and select "Contents" and change the "Access: Read-only" option to "Read and write". This will enable push/pull functionality. If you would like to expand/reduce permissions in the future, you can update them here.
+5. The CLI will provide a one-time code, navigate to the provided web browser link and move through the authentication questions until you enter the CLI code. Here is an example of the terminal:
 
-   **NOTE: before clicking generate token make sure you are ready to use the token at the SMCE command line by following steps 2-5 below.**
+    .. code-block:: bash
 
-2. Create a new hidden directory on the SMCE that will contain your token(s). This is in your $HOME (~) directory.
+        (base) user@jupyter-user:~/temp$ gh auth login
+        ? Where do you use GitHub? GitHub.com
+        ? What is your preferred protocol for Git operations on this host? HTTPS ? How would you like to authenticate GitHub CLI? Login with a web
 
-   .. code-block:: bash
+        ! First copy your one-time code: ABCD-1234
+        Press Enter to open https://github.com/login/device in your browser...
 
-       mkdir -p ~/.github_tokens
-
-3. Make a new file that contains your new token, e.g.
-
-   .. code-block:: bash
-
-       touch ~/.github_tokens/airborne_smce_general.txt
-
-4. Paste your new token into this file and save the file.
-
-5. Run ``gh auth`` to register your credentials and run through the prompts on the command line, e.g.:
-
-   .. code-block:: bash
-
-       gh auth login --with-token < ~/.github_tokens/airborne_smce_general.txt
-       ? Where do you use GitHub? GitHub.com
-       ? What is your preferred protocol for Git operations on this host? HTTPS
-       ? Authenticate Git with your GitHub credentials? Yes
-       ? How would you like to authenticate GitHub CLI? Login with a web browser
 
 6. Try git cloning a GitHub repo to a directory on the SMCE, e.g.:
 
